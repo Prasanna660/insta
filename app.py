@@ -27,10 +27,10 @@ def get_database():
         )
         
         # Method 1: If database name is in connection string
-        db = client.get_database()
+        #db = client.get_database()
         
         # If above fails, use Method 2: Explicit database name
-        # db = client.survey_database
+         db = client.survey_database
         
         # Test the connection
         db.command('ping')
