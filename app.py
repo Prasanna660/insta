@@ -319,7 +319,7 @@ def save_to_mongodb(data):
         
         # Insert the document
         result = collection.insert_one(data)
-        st.success("✅ Data saved successfully!")
+        st.success("✅ you are part of under25 impact now!")
         return result.inserted_id
         
     except Exception as e:
