@@ -14,9 +14,8 @@ st.set_page_config(
 
 def get_database():
     try:
-        # Make sure your connection string looks like this:
-        # mongodb+srv://username:password@cluster.mongodb.net/survey_database?retryWrites=true&w=majority
-        
+        # Your MongoDB Atlas connection string
+        # Make sure it looks like: mongodb+srv://username:password@cluster.mongodb.net/survey_database
         connection_string = "mongodb+srv://myAtlasDBUser:a7ZvFzDJafUbO76S@myatlasclusteredu.umvkai6.mongodb.net/?retryWrites=true&w=majority&appName=myAtlasClusterEDU"
         
         client = pymongo.MongoClient(
@@ -24,24 +23,29 @@ def get_database():
             tls=True,
             tlsAllowInvalidCertificates=True,
             retryWrites=True,
-            w='majority',
-            connectTimeoutMS=60000,  # Increased timeout
-            socketTimeoutMS=60000,
-            serverSelectionTimeoutMS=60000,
-            maxPoolSize=50,
-            minPoolSize=10
+            w='majority'
         )
         
-        # Test connection with a simple command
+        # Method 1: If database name is in connection string
         db = client.get_database()
-        # Try to list collections to verify connection
-        db.list_collection_names()
         
+        # If above fails, use Method 2: Explicit database name
+        # db = client.survey_database
+        
+        # Test the connection
+        db.command('ping')
+        print("✅ Database connection successful")
         return db
         
     except Exception as e:
         st.error(f"❌ Database connection failed: {e}")
-        return None
+        # Fallback: try with explicit database name
+        try:
+            db = client.survey_database
+            db.command('ping')
+            return db
+        except:
+            return None
 
 # Initialize session state
 if 'show_front_page' not in st.session_state:
@@ -304,6 +308,10 @@ def survey_questions():
 def save_to_mongodb(data):
     try:
         db = get_database()
+        if db is None:
+            st.error("❌ Could not connect to database. Please try again.")
+            return None
+            
         collection = db['survey_responses']
         
         # Add timestamp
@@ -311,7 +319,9 @@ def save_to_mongodb(data):
         
         # Insert the document
         result = collection.insert_one(data)
+        st.success("✅ Data saved successfully!")
         return result.inserted_id
+        
     except Exception as e:
         st.error(f"Error saving to database: {e}")
         return None
