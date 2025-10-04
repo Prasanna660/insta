@@ -14,36 +14,33 @@ st.set_page_config(
 
 def get_database():
     try:
-        # Replace with your MongoDB Atlas connection string
-        # Make sure it includes the database name at the end
+        # Make sure your connection string looks like this:
+        # mongodb+srv://username:password@cluster.mongodb.net/survey_database?retryWrites=true&w=majority
+        
         connection_string = "mongodb+srv://myAtlasDBUser:a7ZvFzDJafUbO76S@myatlasclusteredu.umvkai6.mongodb.net/?retryWrites=true&w=majority&appName=myAtlasClusterEDU"
         
         client = pymongo.MongoClient(
             connection_string,
             tls=True,
-            tlsCAFile=certifi.where(),
-            connectTimeoutMS=30000,
-            socketTimeoutMS=30000,
-            serverSelectionTimeoutMS=30000,
+            tlsAllowInvalidCertificates=True,
             retryWrites=True,
-            maxPoolSize=50
+            w='majority',
+            connectTimeoutMS=60000,  # Increased timeout
+            socketTimeoutMS=60000,
+            serverSelectionTimeoutMS=60000,
+            maxPoolSize=50,
+            minPoolSize=10
         )
         
-        # Test the connection
-        client.admin.command('ping')
+        # Test connection with a simple command
         db = client.get_database()
+        # Try to list collections to verify connection
+        db.list_collection_names()
         
-        print("✅ MongoDB Atlas connection established successfully")
         return db
         
-    except ConnectionFailure as e:
-        st.error(f"❌ MongoDB connection failed: {e}")
-        return None
-    except OperationFailure as e:
-        st.error(f"❌ MongoDB operation failed: {e}")
-        return None
     except Exception as e:
-        st.error(f"❌ Unexpected error: {e}")
+        st.error(f"❌ Database connection failed: {e}")
         return None
 
 # Initialize session state
