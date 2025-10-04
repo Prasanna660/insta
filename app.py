@@ -16,7 +16,7 @@ def get_database():
     try:
         # Replace with your MongoDB Atlas connection string
         # Make sure it includes the database name at the end
-        connection_string = "mongodb+srv://username:password@cluster.mongodb.net/survey_database?retryWrites=true&w=majority"
+        connection_string = "mongodb+srv://myAtlasDBUser:a7ZvFzDJafUbO76S@myatlasclusteredu.umvkai6.mongodb.net/?retryWrites=true&w=majority&appName=myAtlasClusterEDU"
         
         client = pymongo.MongoClient(
             connection_string,
