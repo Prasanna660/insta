@@ -12,10 +12,29 @@ st.set_page_config(
 
 # MongoDB connection function
 def get_database():
-    # Replace with your MongoDB Atlas connection string
-    connection_string = "mongodb+srv://myAtlasDBUser:a7ZvFzDJafUbO76S@myatlasclusteredu.umvkai6.mongodb.net/?retryWrites=true&w=majority&appName=myAtlasClusterEDU"
-    client = pymongo.MongoClient(connection_string)
-    return client['survey_database']
+    try:
+        # Replace with your MongoDB Atlas connection string
+        connection_string = "your_mongodb_connection_string_here"
+        
+        # Add SSL certificate settings
+        client = pymongo.MongoClient(
+            connection_string,
+            tls=True,
+            tlsAllowInvalidCertificates=False,
+            retryWrites=True,
+            w='majority',
+            connectTimeoutMS=30000,
+            socketTimeoutMS=30000,
+            serverSelectionTimeoutMS=30000
+        )
+        
+        # Test the connection
+        client.admin.command('ping')
+        return client['survey_database']
+        
+    except Exception as e:
+        st.error(f"Database connection failed: {e}")
+        return None
 
 # Initialize session state
 if 'show_front_page' not in st.session_state:
