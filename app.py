@@ -1,6 +1,8 @@
 import streamlit as st
 import pymongo
 from datetime import datetime
+import certifi
+from pymongo.errors import ConnectionFailure, OperationFailure
 
 # Page configuration
 st.set_page_config(
@@ -10,30 +12,38 @@ st.set_page_config(
     initial_sidebar_state="collapsed"
 )
 
-# MongoDB connection function
 def get_database():
     try:
         # Replace with your MongoDB Atlas connection string
-        connection_string = "your_mongodb_connection_string_here"
+        # Make sure it includes the database name at the end
+        connection_string = "mongodb+srv://username:password@cluster.mongodb.net/survey_database?retryWrites=true&w=majority"
         
-        # Add SSL certificate settings
         client = pymongo.MongoClient(
             connection_string,
             tls=True,
-            tlsAllowInvalidCertificates=False,
-            retryWrites=True,
-            w='majority',
+            tlsCAFile=certifi.where(),
             connectTimeoutMS=30000,
             socketTimeoutMS=30000,
-            serverSelectionTimeoutMS=30000
+            serverSelectionTimeoutMS=30000,
+            retryWrites=True,
+            maxPoolSize=50
         )
         
         # Test the connection
         client.admin.command('ping')
-        return client['survey_database']
+        db = client.get_database()
         
+        print("✅ MongoDB Atlas connection established successfully")
+        return db
+        
+    except ConnectionFailure as e:
+        st.error(f"❌ MongoDB connection failed: {e}")
+        return None
+    except OperationFailure as e:
+        st.error(f"❌ MongoDB operation failed: {e}")
+        return None
     except Exception as e:
-        st.error(f"Database connection failed: {e}")
+        st.error(f"❌ Unexpected error: {e}")
         return None
 
 # Initialize session state
