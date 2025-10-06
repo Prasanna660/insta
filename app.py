@@ -6,7 +6,7 @@ from pymongo.errors import ConnectionFailure, OperationFailure
 
 # Page configuration
 st.set_page_config(
-    page_title="Instagram Engagement Survey",
+    page_title="Instagram Engagement Survey - Round 2",
     page_icon="📱",
     layout="wide",
     initial_sidebar_state="collapsed"
@@ -103,35 +103,36 @@ st.markdown("""
 def front_page():
     st.markdown('<div class="front-page">', unsafe_allow_html=True)
     
-    st.title("📱 Instagram Engagement Survey")
+    st.title("📱 Instagram Engagement Survey - Round 2")
     st.markdown("---")
     
-    st.subheader("🎯 What This Survey Is About")
+    st.subheader("🎯 Round 2: Personalized Feeds & Influencer Culture")
     
     st.markdown("""
     <div style='text-align: left; max-width: 800px; margin: 0 auto;'>
-    <h3>🌟 Welcome to the Under25 Instagram Engagement Study!</h3>
+    <h3>🌟 Welcome to Round 2 of the Under25 Instagram Study!</h3>
     
-    <p>This survey is designed to understand how young people like you interact with Instagram 
-    and how it impacts your daily life, emotions, and social connections.</p>
+    <p>This round focuses on personalized content feeds and influencer culture - 
+    exploring how Instagram's algorithm shapes your experience and your thoughts about 
+    becoming an influencer yourself.</p>
     
-    <h4>📊 What we're exploring:</h4>
+    <h4>📊 What we're exploring in Round 2:</h4>
     <ul>
-        <li>Your Instagram usage patterns and habits</li>
-        <li>How Instagram affects your mood and self-perception</li>
-        <li>Your privacy concerns and social media experiences</li>
-        <li>Ways to make Instagram a more positive space for youth</li>
+        <li>Your preferences for personalized vs. chronological feeds</li>
+        <li>How Instagram's algorithm impacts your content discovery</li>
+        <li>Your aspirations around becoming an influencer</li>
+        <li>The pros and cons of algorithm-driven content</li>
     </ul>
     """, unsafe_allow_html=True)
     
     st.markdown("""
     <div class="benefits-container">
-    <h3>🎁 Why Your Participation Matters:</h3>
+    <h3>🎁 Why This Round Matters:</h3>
     <ul>
-        <li>Help researchers understand youth social media experiences</li>
-        <li>Contribute to making Instagram better for your generation</li>
-        <li>Share your voice about digital well-being</li>
-        <li>Your insights could shape future social media features</li>
+        <li>Help shape how algorithms serve content to young users</li>
+        <li>Understand the appeal of influencer culture among youth</li>
+        <li>Share your voice on content personalization preferences</li>
+        <li>Your insights could influence future platform designs</li>
     </ul>
     </div>
     """, unsafe_allow_html=True)
@@ -141,13 +142,13 @@ def front_page():
     <h4>⏱️ What to Expect:</h4>
     <ul>
         <li><strong>Duration:</strong> 5-7 minutes</li>
-        <li><strong>Sections:</strong> 4 main sections with 19 questions total</li>
+        <li><strong>Sections:</strong> 3 main sections with 14 questions total</li>
         <li><strong>Confidentiality:</strong> Your responses are anonymous and secure</li>
         <li><strong>Voluntary:</strong> You can skip any question or stop at any time</li>
     </ul>
     
-    <p>Your honest responses will help create a better understanding of how Instagram 
-    influences the lives of young people today.</p>
+    <p>Your honest responses will help create a better understanding of how algorithmic 
+    feeds and influencer culture affect young Instagram users.</p>
     </div>
     """, unsafe_allow_html=True)
     
@@ -155,13 +156,13 @@ def front_page():
     
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        if st.button("🚀 Start Survey", use_container_width=True):
+        if st.button("🚀 Start Round 2", use_container_width=True):
             st.session_state.show_front_page = False
             st.rerun()
 
 def login_section():
-    st.title("📱 Instagram Engagement Survey")
-    st.subheader("Under25")
+    st.title("📱 Instagram Engagement Survey - Round 2")
+    st.subheader("Under25 - Personalized Feeds & Influencer Culture")
     
     st.info("🔐 Please login to continue, you're response matters!")
     
@@ -193,102 +194,108 @@ def login_section():
 
 def survey_questions():
     questions = [
-        # 🌐 Section 1: General Instagram Use
+        # 🎯 Section 1: Feed Personalization Preferences
         {
-            'section': '🌐 Section 1: General Instagram Use',
-            'question': "How many hours a day do you think you spend on Instagram?",
-            'options': ["Less than 1 hr", "1–3 hrs", "3–5 hrs", "More than 5 hrs"],
-            'key': 'hours_spent'
+            'section': '🎯 Section 1: Feed Personalization Preferences',
+            'question': "How satisfied are you with Instagram's current algorithm that shows you content it thinks you'll like?",
+            'options': ["Very satisfied", "Somewhat satisfied", "Neutral", "Somewhat dissatisfied", "Very dissatisfied"],
+            'key': 'algorithm_satisfaction'
         },
         {
-            'section': '🌐 Section 1: General Instagram Use',
-            'question': "What's the first thing you usually do when you open Instagram?",
-            'options': ["Watch stories", "Scroll reels", "Check DMs", "Post or reply to comments"],
-            'key': 'first_action'
+            'section': '🎯 Section 1: Feed Personalization Preferences',
+            'question': "Would you prefer a chronological feed (showing newest posts first) over the current algorithm-based feed?",
+            'options': ["Yes, definitely", "Maybe", "No, I like the current system", "I'd like a mix of both"],
+            'key': 'feed_preference'
         },
         {
-            'section': '🌐 Section 1: General Instagram Use',
-            'question': "Which part of Instagram do you use most?",
-            'options': ["Reels", "Stories", "Explore page", "DMs"],
-            'key': 'most_used_part'
+            'section': '🎯 Section 1: Feed Personalization Preferences',
+            'question': "How often do you feel Instagram shows you too much of the same type of content?",
+            'options': ["Very often", "Sometimes", "Rarely", "Never"],
+            'key': 'content_repetition'
         },
         {
-            'section': '🌐 Section 1: General Instagram Use',
-            'question': "Do you think Instagram influences what's 'cool' or 'trending' among your friends?",
-            'options': ["Yes, definitely", "Sometimes", "Not really"],
-            'key': 'influence_on_trends'
-        },
-        
-        # 💭 Section 2: Emotional & Social Impact
-        {
-            'section': '💭 Section 2: Emotional & Social Impact',
-            'question': "How often do you compare yourself to others on Instagram?",
-            'options': ["A lot", "Sometimes", "Rarely", "Never"],
-            'key': 'comparison_frequency'
+            'section': '🎯 Section 1: Feed Personalization Preferences',
+            'question': "Do you think Instagram's algorithm understands your interests well?",
+            'options': ["Yes, very well", "Somewhat", "Not really", "It often gets it wrong"],
+            'key': 'algorithm_understanding'
         },
         {
-            'section': '💭 Section 2: Emotional & Social Impact',
-            'question': "Do you ever feel pressure to post or look a certain way online?",
-            'options': ["Yes", "A little", "Not at all"],
-            'key': 'pressure_feeling'
-        },
-        {
-            'section': '💭 Section 2: Emotional & Social Impact',
-            'question': "Has Instagram ever affected your mood or self-confidence?",
-            'options': ["Often", "Occasionally", "Not really"],
-            'key': 'mood_impact'
-        },
-        {
-            'section': '💭 Section 2: Emotional & Social Impact',
-            'question': "What kind of content makes you feel most positive on Instagram?",
-            'options': ["Funny / entertaining", "Motivational / real-life stories", "Aesthetic / lifestyle", "Educational / informative"],
-            'key': 'positive_content'
+            'section': '🎯 Section 1: Feed Personalization Preferences',
+            'question': "How much control do you wish you had over what appears in your feed?",
+            'options': ["Complete control", "More than currently", "The current amount is fine", "Less control - I trust the algorithm"],
+            'key': 'feed_control_desire'
         },
         
-        # 🔒 Section 3: Privacy & Social Concerns
+        # 🌟 Section 2: Influencer Aspirations & Perceptions
         {
-            'section': '🔒 Section 3: Privacy & Social Concerns',
-            'question': "How comfortable are you with how Instagram handles your data and privacy?",
-            'options': ["Very comfortable", "Somewhat", "Not comfortable at all"],
-            'key': 'privacy_comfort'
+            'section': '🌟 Section 2: Influencer Aspirations & Perceptions',
+            'question': "Have you ever thought about becoming an Instagram influencer?",
+            'options': ["Yes, actively working toward it", "Yes, I'd like to but don't know how", "Maybe, I'm not sure", "No, never considered it"],
+            'key': 'influencer_aspiration'
         },
         {
-            'section': '🔒 Section 3: Privacy & Social Concerns',
-            'question': "Do you think people are more 'real' or 'fake' on Instagram?",
-            'options': ["Mostly real", "A mix of both", "Mostly fake"],
-            'key': 'real_vs_fake'
+            'section': '🌟 Section 2: Influencer Aspirations & Perceptions',
+            'question': "What do you think is the biggest appeal of being an influencer?",
+            'options': ["Money/earning potential", "Fame/recognition", "Creative expression", "Community building", "Free products/travel"],
+            'key': 'influencer_appeal'
         },
         {
-            'section': '🔒 Section 3: Privacy & Social Concerns',
-            'question': "Have you ever taken a break or 'detox' from Instagram?",
-            'options': ["Yes, and it helped", "Yes, but I came back quickly", "No, never"],
-            'key': 'instagram_break'
+            'section': '🌟 Section 2: Influencer Aspirations & Perceptions',
+            'question': "How realistic do you think it is for the average person to become a successful influencer today?",
+            'options': ["Very realistic", "Somewhat realistic", "Unlikely", "Very unlikely", "It depends on the person"],
+            'key': 'influencer_realism'
         },
         {
-            'section': '🔒 Section 3: Privacy & Social Concerns',
-            'question': "What's your biggest concern about Instagram use among youth today?",
-            'options': ["Addiction / screen time", "Comparison / insecurity", "Fake news / misinformation", "Privacy / safety", "None"],
-            'key': 'biggest_concern'
+            'section': '🌟 Section 2: Influencer Aspirations & Perceptions',
+            'question': "What's the main thing stopping you from pursuing influencer status (if anything)?",
+            'options': ["Lack of time", "Not knowing how to start", "Privacy concerns", "Fear of negative comments", "Not interested in the lifestyle"],
+            'key': 'influencer_barriers'
+        },
+        {
+            'section': '🌟 Section 2: Influencer Aspirations & Perceptions',
+            'question': "Do you think being an influencer is a legitimate career choice?",
+            'options': ["Yes, definitely", "For some people", "It's more of a side hustle", "No, it's not sustainable"],
+            'key': 'influencer_legitimacy'
         },
         
-        # 💬 Section 4: Open-Ended Reflection (optional)
+        # 🔄 Section 3: Algorithm Impact & Content Discovery
         {
-            'section': '💬 Section 4: Open-Ended Reflection (optional)',
-            'question': "In one line, what does Instagram mean to you personally?",
-            'options': ["text_input"],
-            'key': 'instagram_meaning'
+            'section': '🔄 Section 3: Algorithm Impact & Content Discovery',
+            'question': "How often does Instagram's algorithm help you discover new accounts or content you genuinely enjoy?",
+            'options': ["Very often", "Sometimes", "Rarely", "Never"],
+            'key': 'discovery_success'
         },
         {
-            'section': '💬 Section 4: Open-Ended Reflection (optional)',
-            'question': "If you could change one thing about Instagram, what would it be?",
-            'options': ["text_input"],
-            'key': 'desired_change'
+            'section': '🔄 Section 3: Algorithm Impact & Content Discovery',
+            'question': "Have you ever felt 'stuck' in a content bubble where you only see similar types of posts?",
+            'options': ["Yes, frequently", "Occasionally", "Rarely", "Never"],
+            'key': 'content_bubble_feeling'
         },
         {
-            'section': '💬 Section 4: Open-Ended Reflection (optional)',
-            'question': "How do you think Instagram could become a more positive space for youth?",
+            'section': '🔄 Section 3: Algorithm Impact & Content Discovery',
+            'question': "How do you feel about Instagram potentially showing you more content from people you don't follow?",
+            'options': ["I'd prefer mostly people I follow", "I like discovering new content", "It depends on the content quality", "I want a good balance of both"],
+            'key': 'followed_vs_discovery'
+        },
+        
+        # 💭 Section 4: Final Reflections
+        {
+            'section': '💭 Section 4: Final Reflections',
+            'question': "If you could design your perfect Instagram feed, what would it look like?",
             'options': ["text_input"],
-            'key': 'positive_improvement'
+            'key': 'perfect_feed_vision'
+        },
+        {
+            'section': '💭 Section 4: Final Reflections',
+            'question': "What's one change to Instagram's algorithm that would most improve your experience?",
+            'options': ["text_input"],
+            'key': 'algorithm_improvement'
+        },
+        {
+            'section': '💭 Section 4: Final Reflections',
+            'question': "What advice would you give to someone wanting to become an influencer today?",
+            'options': ["text_input"],
+            'key': 'influencer_advice'
         }
     ]
     
@@ -301,14 +308,15 @@ def save_to_mongodb(data):
             st.error("❌ Could not connect to database. Please try again.")
             return None
             
-        collection = db['survey_responses']
+        collection = db['survey_responses_round2']
         
-        # Add timestamp
+        # Add timestamp and round identifier
         data['submission_timestamp'] = datetime.now()
+        data['survey_round'] = 2
         
         # Insert the document
         result = collection.insert_one(data)
-        st.success("✅ you are part of under25 impact now!")
+        st.success("✅ You are part of Under25 impact now! Round 2 complete!")
         return result.inserted_id
         
     except Exception as e:
@@ -316,8 +324,8 @@ def save_to_mongodb(data):
         return None
 
 def survey_section():
-    st.title("📊 Instagram Engagement Survey")
-    st.subheader("Under25")
+    st.title("📊 Instagram Engagement Survey - Round 2")
+    st.subheader("Under25 - Personalized Feeds & Influencer Culture")
     
     questions = survey_questions()
     
@@ -375,7 +383,7 @@ def survey_section():
     
     else:
         # All questions completed - show summary and submit
-        st.success("🎉 Survey Completed!")
+        st.success("🎉 Round 2 Completed!")
         st.subheader("Your Responses Summary:")
         
         # Transfer all answers from session_state.answers to user_data
@@ -384,10 +392,10 @@ def survey_section():
         
         # Organize responses by section for better display
         sections = {
-            '🌐 Section 1: General Instagram Use': ['hours_spent', 'first_action', 'most_used_part', 'influence_on_trends'],
-            '💭 Section 2: Emotional & Social Impact': ['comparison_frequency', 'pressure_feeling', 'mood_impact', 'positive_content'],
-            '🔒 Section 3: Privacy & Social Concerns': ['privacy_comfort', 'real_vs_fake', 'instagram_break', 'biggest_concern'],
-            '💬 Section 4: Open-Ended Reflection (optional)': ['instagram_meaning', 'desired_change', 'positive_improvement']
+            '🎯 Section 1: Feed Personalization Preferences': ['algorithm_satisfaction', 'feed_preference', 'content_repetition', 'algorithm_understanding', 'feed_control_desire'],
+            '🌟 Section 2: Influencer Aspirations & Perceptions': ['influencer_aspiration', 'influencer_appeal', 'influencer_realism', 'influencer_barriers', 'influencer_legitimacy'],
+            '🔄 Section 3: Algorithm Impact & Content Discovery': ['discovery_success', 'content_bubble_feeling', 'followed_vs_discovery'],
+            '💭 Section 4: Final Reflections': ['perfect_feed_vision', 'algorithm_improvement', 'influencer_advice']
         }
         
         for section, keys in sections.items():
@@ -398,12 +406,12 @@ def survey_section():
                     st.write(f"- **{display_key}:** {st.session_state.user_data[key]}")
             st.write("---")
         
-        if st.button("Submit Survey"):
+        if st.button("Submit Round 2"):
             # Save to MongoDB
             inserted_id = save_to_mongodb(st.session_state.user_data)
             
             if inserted_id:
-                st.success("✅ Thank you! Your responses have been recorded.")
+                st.success("✅ Thank you! Your Round 2 responses have been recorded.")
                 
                 # Reset for new survey
                 st.session_state.show_front_page = True
